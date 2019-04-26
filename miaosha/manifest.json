@@ -1,0 +1,56 @@
+{
+  "manifest_version": 2,
+  "name": "淘宝秒杀",
+  "description": "自动提交订单",
+  "version": "1.0",
+  "options_page": "options.html",
+  "background": {
+    "persistent": true,
+    "scripts": [
+      "include/JSONC-1.6.1.js",
+      "include/util.js",
+      "scripts/background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://detail.tmall.*/*",
+        "*://detail.taobao.*/*"
+      ],
+      "js": [
+        "inject/detail.taobao.js"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "*://qudao.gongxiao.tmall.com/*"
+      ],
+      "js": [
+        "include/jquery-1.11.3.min.js",
+        "include/util.js",
+        "inject/main.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "browser_action": {
+    "default_title": "淘宝秒杀",
+    "default_icon": "img/icon128.png"
+  },
+  "icons": {
+    "128": "img/icon128.png",
+    "16": "img/icon16.png",
+    "48": "img/icon48.png"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "downloads",
+    "<all_urls>",
+    "https://*/*",
+    "http://*/*",
+    "storage"
+  ]
+}
