@@ -20,48 +20,10 @@ function setDefaulValue(url) {
   orderTimeId.value = datestring;
 }
 
-// 保存任务
-function saveTask() {
-  var url = $('linkName').value;
-  var orderTime = $('orderTime').value;
-  chrome.runtime.sendMessage({
-    type: 'addTask',
-    data: {
-      url,
-      time: orderTime
-    }
-  }, function (response) {
-    alert("add result:" + JSON.stringify(response));
-  });
-}
-
-// 清空任务
-function clearTask() {
-  var url = $('linkName').value;
-  var orderTime = $('orderTime').value;
-  chrome.runtime.sendMessage({
-    type: 'clearTask',
-    data: {
-      url,
-      time: orderTime
-    }
-  }, function (response) {
-    alert("clear result:" + JSON.stringify(response));
-  });
-}
-
-$('btnSave').onclick = function () {
-  saveTask();
-};
-
-$('btnClear').onclick = function () {
-  clearTask();
-};
-
 chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
   const url = tabs[0].url;
 
-  var distRegex = /taobao|tmall.*/;
+/*  var distRegex = /taobao|tmall.*!/;
   var loginRegex = /login.taobao.com/;
 
   var targetURL = 'https://favorite.taobao.com/item_collect.htm';
@@ -74,7 +36,47 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
     chrome.tabs.getSelected(null, function (selected) {
       chrome.tabs.update(selected.id, {url: targetURL});
     });
-  }
+  }*/
 
   setDefaulValue(url);
+
+  // 保存任务
+  function saveTask() {
+    var url = $('linkName').value;
+    var orderTime = $('orderTime').value;
+    chrome.runtime.sendMessage({
+      type: 'addTask',
+      data: {
+        id: tabs[0].id,
+        url,
+        time: orderTime
+      }
+    }, function (response) {
+      alert("add result:" + JSON.stringify(response));
+    });
+  }
+
+// 清空任务
+  function clearTask() {
+    var url = $('linkName').value;
+    var orderTime = $('orderTime').value;
+    chrome.runtime.sendMessage({
+      type: 'clearTask',
+      data: {
+        url,
+        time: orderTime
+      }
+    }, function (response) {
+      alert("clear result:" + JSON.stringify(response));
+    });
+  }
+
+  $('btnSave').onclick = function () {
+    saveTask();
+  };
+
+  $('btnClear').onclick = function () {
+    clearTask();
+  };
+
 });

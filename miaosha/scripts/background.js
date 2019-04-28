@@ -1,17 +1,25 @@
 var taskList = [];
-var taskStart = false;
 
 function DEBUG(msg) {
   console.log("[" + TimestampNoDate() + "] " + msg);
 }
 
-function scheduleTime(link, runDate) {
+function scheduleTime(task) {
+  const {
+    id,
+    url,
+    time
+  } = task;
   var date = new Date();//现在时刻
-  var dateIntegralPoint = new Date(runDate);
+  var dateIntegralPoint = new Date(time);
 
-  setTimeout(function () {
-    chrome.tabs.create({url: link});
-  }, dateIntegralPoint - date);//用户登录后的下一个整点执行
+  const taskTimer = setTimeout(function () {
+    //alert('run');
+    // 刷新页面
+    chrome.tabs.update(id, {url});
+    // todo: 在列表删除当前task
+  }, dateIntegralPoint - date);
+  task.timer = taskTimer;
 }
 
 // 点击图标： 将当前页面加入任务
@@ -29,9 +37,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     });
     if (!findItem) {
       taskList.push(data);
+      scheduleTime(data);
+    } else {
+      const timer = findItem.timer;
+      clearTimeout(timer);
+
+      scheduleTime(data);
     }
     sendResponse({taskList: taskList});
   } else if (request.type == "clearTask") {
+    for (let i = 0; i < taskList.length; i++) {
+      const timer = taskList[i].timer;
+      clearTimeout(timer);
+    }
     taskList = [];
     sendResponse({taskList: taskList});
   }
