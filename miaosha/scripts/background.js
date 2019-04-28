@@ -22,16 +22,19 @@ function scheduleTime(task) {
   const taskTimer = setTimeout(function () {
     //alert('run');
     // 刷新页面
-    //chrome.tabs.update(id, {url});
+    chrome.tabs.update(id, {url});
+    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+       if(changeInfo.status === 'complete' && tabId == id) {
+         sendMessageToContentScript(id, {cmd: 'loop', value: '你好，我是popup！'}, function (response) {
+           console.log("response：" + response);
+         });
+       }
+    });
     //alert("oldId:" + id);
     // 页面检查下单按钮
-    //chrome.tabs.executeScript(id, {code: 'document.body.style.backgroundColor="red"'});
+    //chrome.tabs.executeScript(id, {code: 'location.reload()'});
     //chrome.tabs.executeScript(id, {file: './scripts/order.js'});
     // todo: 在列表删除当前task
-    sendMessageToContentScript(id, {cmd: 'loop', value: '你好，我是popup！'}, function (response) {
-      console.log("response：" + response);
-    });
-
   }, dateIntegralPoint - date);
   task.timer = taskTimer;
 }
