@@ -17,24 +17,6 @@ function scheduleTime(link, runDate) {
 // 点击图标： 将当前页面加入任务
 chrome.browserAction.onClicked.addListener(function (tab) {
   alert('点击');
-  var distRegex = /\*.taobao|tmall.\*/;
-  var loginRegex = /login.taobao.com/;
-  var targetRegex = /favorite.taobao.com/;
-
-  var targetURL = 'https://favorite.taobao.com/item_collect.htm';
-  if (loginRegex.test(tab.url)) {
-    alert("请先登录");
-  } else if (!distRegex.test(tab.url)) {
-    alert("请切换到淘宝，并登录");
-    chrome.tabs.create({url: targetURL});
-  } else {
-    chrome.tabs.getSelected(null, function (selected) {
-      chrome.tabs.update(selected.id, {url: targetURL});
-    });
-  }
-  if (targetRegex.test(tab.url) && !taskStart) {
-    // 循环开始任务
-  }
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -42,12 +24,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     sendResponse({taskList: taskList});
   } else if (request.type == "addTask") {
     const data = request.data;
-    var findItem = taskList.find(function(item){
+    var findItem = taskList.find(function (item) {
       return item.url === data.url;
     });
-    if(!findItem){
+    if (!findItem) {
       taskList.push(data);
     }
+    sendResponse({taskList: taskList});
+  } else if (request.type == "clearTask") {
+    taskList = [];
     sendResponse({taskList: taskList});
   }
 });

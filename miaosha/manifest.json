@@ -24,7 +24,7 @@
   "browser_action": {
     "default_title": "淘宝秒杀",
     "default_icon": "img/icon128.png",
-    "default_popup": "options.html"
+    "default_popup": "popup.html"
   },
   "icons": {
     "128": "img/icon128.png",
