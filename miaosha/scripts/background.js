@@ -4,11 +4,9 @@ function DEBUG(msg) {
   console.log("[" + TimestampNoDate() + "] " + msg);
 }
 
-function sendMessageToContentScript(message, callback) {
-  chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, message, function (response) {
-      if (callback) callback(response);
-    });
+function sendMessageToContentScript(id, message, callback) {
+  chrome.tabs.sendMessage(id, message, function (response) {
+    if (callback) callback(response);
   });
 }
 
@@ -30,8 +28,8 @@ function scheduleTime(task) {
     //chrome.tabs.executeScript(id, {code: 'document.body.style.backgroundColor="red"'});
     //chrome.tabs.executeScript(id, {file: './scripts/order.js'});
     // todo: 在列表删除当前task
-    sendMessageToContentScript({cmd: 'loop', value: '你好，我是popup！'}, function (response) {
-       console.log("response：" + response);
+    sendMessageToContentScript(id, {cmd: 'loop', value: '你好，我是popup！'}, function (response) {
+      console.log("response：" + response);
     });
 
   }, dateIntegralPoint - date);
