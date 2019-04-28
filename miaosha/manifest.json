@@ -19,6 +19,14 @@
         "*://detail.taobao.com/*"
       ],
       "run_at": "document_end"
+    },
+    {
+      "js": ["inject/buy.taobao.js"],
+      "matches": [
+        "*://buy.tmall.com/*",
+        "*://buy.taobao.com/*"
+      ],
+      "run_at": "document_end"
     }
   ],
   "browser_action": {

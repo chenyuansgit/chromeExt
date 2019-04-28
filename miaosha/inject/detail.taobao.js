@@ -8,3 +8,12 @@ setInterval("frames[0].location.reload();",2000);*/
 
 //间隔300毫检查是否有提交订单按键出来，自动点击，不用改
 //setInterval("frames[0].document.getElementsByClassName('go-btn')[0].click();",300);
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.cmd == 'loop') {
+    // 循环点击：立即购买
+    setInterval("document.getElementById('J_LinkBuy').click();", 300);
+  }
+  sendResponse('立即购买');
+});
