@@ -1,4 +1,5 @@
 var taskList = [];
+var maxTryTime = 1;
 
 function DEBUG(msg) {
   console.log("[" + TimestampNoDate() + "] " + msg);
@@ -16,26 +17,36 @@ function scheduleTime(task) {
     url,
     time
   } = task;
-  var date = new Date();//现在时刻
-  var dateIntegralPoint = new Date(time);
 
-  const taskTimer = setTimeout(function () {
-    //alert('run');
-    // 刷新页面
-    chrome.tabs.update(id, {url});
-    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-       if(changeInfo.status === 'complete' && tabId == id) {
-         sendMessageToContentScript(id, {cmd: 'loop', value: '你好，我是popup！'}, function (response) {
-           console.log("response：" + response);
-         });
-       }
-    });
-    //alert("oldId:" + id);
-    // 页面检查下单按钮
-    //chrome.tabs.executeScript(id, {code: 'location.reload()'});
-    //chrome.tabs.executeScript(id, {file: './scripts/order.js'});
-    // todo: 在列表删除当前task
-  }, dateIntegralPoint - date);
+
+  var i = 0;
+  const taskTimer = setInterval(function () {
+    var date = new Date();//现在时刻
+    var dateIntegralPoint = new Date(time);
+
+    var nowTime = date.getTime();
+    var toTime = dateIntegralPoint.getTime();
+
+    //console.log(i, nowTime - toTime >= 0, i < maxTryTime);
+    if (nowTime - toTime >= 0 && i < maxTryTime) {
+      i++;
+      console.log("update count:", i, date, dateIntegralPoint, new Date());
+      // 刷新页面
+      chrome.tabs.update(id, {url});
+      let hasSend = false;
+      chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+        if (changeInfo.status === 'complete' && tabId == id && !hasSend) {
+          hasSend = true;
+          console.log('send Loop:', new Date());
+          sendMessageToContentScript(id, {cmd: 'loop', value: '你好，我是popup！'}, function (response) {
+            console.log("response：" + response + ' ' + new Date());
+            clearInterval(taskTimer);
+          });
+        }
+      });
+
+    }
+  }, 100);
   task.timer = taskTimer;
 }
 
@@ -57,14 +68,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       scheduleTime(data);
     } else {
       const timer = findItem.timer;
-      clearTimeout(timer);
+      clearInterval(timer);
       scheduleTime(data);
     }
     sendResponse({taskList: taskList});
   } else if (request.type == "clearTask") {
     for (let i = 0; i < taskList.length; i++) {
       const timer = taskList[i].timer;
-      clearTimeout(timer);
+      clearInterval(timer);
     }
     taskList = [];
     sendResponse({taskList: taskList});
