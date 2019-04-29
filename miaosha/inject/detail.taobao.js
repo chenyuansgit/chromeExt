@@ -10,10 +10,12 @@ setInterval("frames[0].location.reload();",2000);*/
 //setInterval("frames[0].document.getElementsByClassName('go-btn')[0].click();",300);
 
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+/*chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.cmd == 'loop') {
     // 循环点击：立即购买
     setInterval("document.getElementById('J_LinkBuy').click();", 300);
   }
   sendResponse('立即购买');
-});
+});*/
+
+setInterval("document.getElementById('J_LinkBuy').click();", 300);

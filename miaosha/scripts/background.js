@@ -28,7 +28,7 @@ function scheduleTime(task) {
     var toTime = dateIntegralPoint.getTime();
 
     //console.log(i, nowTime - toTime >= 0, i < maxTryTime);
-    if (nowTime - toTime >= 0 && i < maxTryTime) {
+    /*if (nowTime - toTime >= 0 && i < maxTryTime) {
       i++;
       console.log("update count:", i, date, dateIntegralPoint, new Date());
       // 刷新页面
@@ -45,6 +45,12 @@ function scheduleTime(task) {
         }
       });
 
+    }*/
+    if (nowTime - toTime >= 0 && i < maxTryTime) {
+      i++;
+      console.log("update count:", i, date, dateIntegralPoint, new Date());
+      // 打开页面
+      chrome.tabs.create({url});
     }
   }, 100);
   task.timer = taskTimer;
