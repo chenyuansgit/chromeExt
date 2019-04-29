@@ -16,7 +16,8 @@
       "js": ["inject/detail.taobao.js"],
       "matches": [
         "*://detail.tmall.com/*",
-        "*://detail.taobao.com/*"
+        "*://detail.taobao.com/*",
+        "*://item.taobao.com/*"
       ],
       "run_at": "document_end"
     },
