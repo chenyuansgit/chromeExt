@@ -23,7 +23,7 @@ function setDefaulValue(url) {
 chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
   const url = tabs[0].url;
 
-/*  var distRegex = /taobao|tmall.*!/;
+  var distRegex = /taobao|tmall.*!/;
   var loginRegex = /login.taobao.com/;
 
   var targetURL = 'https://favorite.taobao.com/item_collect.htm';
@@ -36,7 +36,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
     chrome.tabs.getSelected(null, function (selected) {
       chrome.tabs.update(selected.id, {url: targetURL});
     });
-  }*/
+  }
 
   setDefaulValue(url);
 
